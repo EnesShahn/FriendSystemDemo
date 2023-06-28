@@ -1,0 +1,18 @@
+{
+    "name": "Client.Models",
+    "rootNamespace": "",
+    "references": [
+        "GUID:14ae32711e6f7d740b06af7c1e0a1342",
+        "GUID:babcf2b2b79280a4ebf2c1984892696d",
+        "GUID:739346c273035ea4bb3eea5259e61cb5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

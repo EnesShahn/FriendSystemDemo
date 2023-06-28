@@ -1,0 +1,21 @@
+{
+    "name": "SDK",
+    "rootNamespace": "",
+    "references": [
+        "Client.Models",
+        "EnesShahn.GameDebugger",
+        "SDK.Models.Enums",
+        "SDK.Models.Requests",
+        "SDK.Models.Responses",
+        "EnesShahn.Configurations"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

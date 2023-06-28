@@ -1,0 +1,16 @@
+{
+    "name": "EnesShahn.GameDebugger",
+    "rootNamespace": "",
+    "references": [
+        "GUID:74709aec7a5f8bd4288bfb6cacc138ea"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

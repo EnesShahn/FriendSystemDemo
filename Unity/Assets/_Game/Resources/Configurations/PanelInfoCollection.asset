@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90e8efb06cdadd4fb6e4fee6bc10918, type: 3}
+  m_Name: PanelInfoCollection
+  m_EditorClassIdentifier: 
+  items:
+  - PanelType: 1
+    PanelPrefab: {fileID: 7235622139566964103, guid: 99946a3a0878e3043860a039faa91409,
+      type: 3}
+  - PanelType: 2
+    PanelPrefab: {fileID: 8567774571949530935, guid: 904bed4a940b98d4aaf86b2421b36e27,
+      type: 3}
+  - PanelType: 3
+    PanelPrefab: {fileID: 3223573975475584976, guid: 35c5d531bb3211b498f9a4c0cdd878a4,
+      type: 3}
+  - PanelType: 4
+    PanelPrefab: {fileID: 3995717074686434148, guid: afe65311583dbdb49b296825c4285a29,
+      type: 3}
+  - PanelType: 5
+    PanelPrefab: {fileID: 5062745173823620815, guid: 1caa3114cb8718c4f81b36978b6c1cab,
+      type: 3}
+  - PanelType: 6
+    PanelPrefab: {fileID: 7278893249054258823, guid: 00e577f6c4e573645b9c4cd17fd9ba40,
+      type: 3}
+  - PanelType: 7
+    PanelPrefab: {fileID: 2407822192834819736, guid: 0d31ac3167f8dfe4eb3714221f9e19b8,
+      type: 3}

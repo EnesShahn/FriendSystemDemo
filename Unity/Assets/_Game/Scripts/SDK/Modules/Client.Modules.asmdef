@@ -1,0 +1,20 @@
+{
+    "name": "Client.Modules",
+    "rootNamespace": "",
+    "references": [
+        "GUID:98500371830e55d479a3a941342e4f7c",
+        "GUID:02a8c2794cd978f4ea2dfdd8fd6d884b",
+        "GUID:739346c273035ea4bb3eea5259e61cb5",
+        "GUID:babcf2b2b79280a4ebf2c1984892696d",
+        "GUID:d55c1bbb9fae8734d8cdb705ff1854ba"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

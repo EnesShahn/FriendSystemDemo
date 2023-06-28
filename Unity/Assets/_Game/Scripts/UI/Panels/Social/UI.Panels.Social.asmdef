@@ -1,0 +1,25 @@
+{
+    "name": "UI.Panels.Social",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:98500371830e55d479a3a941342e4f7c",
+        "GUID:739346c273035ea4bb3eea5259e61cb5",
+        "GUID:085de021d8d9a6c489c4a8ed1a718cfb",
+        "GUID:e0f9c6b8f4d82904aba9dc89b497e752",
+        "GUID:14ae32711e6f7d740b06af7c1e0a1342",
+        "GUID:c0848644ea9dde240bc3dc52cdb35e50",
+        "GUID:02a8c2794cd978f4ea2dfdd8fd6d884b",
+        "GUID:01b8edfa778fd9e4a8a4ad795a068f5e",
+        "GUID:d55c1bbb9fae8734d8cdb705ff1854ba"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
