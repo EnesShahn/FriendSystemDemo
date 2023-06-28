@@ -6,7 +6,7 @@
 
 # Introduction
 
-The Friend System is a software system designed to facilitate the creation of a friend list and private messaging between users. The system will be built using the Unity engine for the client-side and ASP.NET Core for the backend with Firebase Firestore Database as the primary data storage solution.
+The Friend System is a software system designed to facilitate the creation of a friend list and private messaging between users and will allow users to create groups an engage in group conversations. The system is built using the Unity engine for the client-side and ASP.NET Core for the backend with Firebase Firestore Database as the primary data storage solution.
 
 The system aims to provide a user-friendly interface for interaction, alongside robust and secure backend operations. The system is compatible with WebGL and Windows platforms.
 
