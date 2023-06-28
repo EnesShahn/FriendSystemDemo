@@ -2,7 +2,7 @@
 
 ### Live demo:
 
-[https://friend-system-26d0f.web.app/](https://friend-system-26d0f.web.app)
+[https://friend-system-26d0f.web.app](https://friend-system-26d0f.web.app)
 
 # Introduction
 
