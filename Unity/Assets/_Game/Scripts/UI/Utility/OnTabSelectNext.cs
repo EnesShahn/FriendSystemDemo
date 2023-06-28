@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.UI;
 
 public class OnTabSelectNext : MonoBehaviour
