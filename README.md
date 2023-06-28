@@ -36,7 +36,7 @@ Firebase Firestore Database is used to store user data, friend lists, chat messa
 
 ## Hosting
 
-The game is hosted on Firebase hosting
+The WebGL client is hosted on Firebase hosting and the ASP.Net App is hosted on Azure.
 
 ## Security
 
