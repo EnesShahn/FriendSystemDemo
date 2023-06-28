@@ -208,7 +208,6 @@ namespace Server.Services.FriendshipService
                 InvitationType = Models.Enum.InvitationType.Friendship,
                 SenderID = userId,
                 ReceiverID = friendId,
-                Status = Models.Enum.InvitationStatus.Pending,
             };
 
 

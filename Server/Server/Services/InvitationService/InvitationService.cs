@@ -19,11 +19,8 @@ namespace Server.Services.InvitationService
 
         public async Task<Response<List<Invitation>>> GetPendingInvitations(string userId)
         {
-            Filter isInvitationPending = Filter.EqualTo(FieldConstants.InvitationStatus, InvitationStatus.Pending.ToString());
             Filter isReceiverFilter = Filter.EqualTo(FieldConstants.ReceiverID, userId);
-            Filter finalFilter = Filter.And(isInvitationPending, isReceiverFilter);
-
-            var querySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection).Where(finalFilter).GetSnapshotAsync();
+            var querySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection).Where(isReceiverFilter).GetSnapshotAsync();
 
             List<Invitation> invitations = new List<Invitation>();
             foreach (var docSnapshot in querySnapshot.Documents)
@@ -54,6 +51,10 @@ namespace Server.Services.InvitationService
             var invitationDocRef = querySnapshot.Reference;
             var invitation = querySnapshot.ConvertTo<Invitation>();
 
+            var oppositeInvitationQuerySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection)
+                .WhereEqualTo(FieldConstants.SenderID, userId).WhereEqualTo(FieldConstants.ReceiverID, invitation.SenderID).GetSnapshotAsync();
+
+
             if (invitation.InvitationType == InvitationType.Friendship)
             {
                 var newFriendshipDocRef = _firestoreDb.Collection(CollectionConstants.FriendshipCollection).Document();
@@ -66,7 +67,12 @@ namespace Server.Services.InvitationService
 
                 await _firestoreDb.RunTransactionAsync(async (t) =>
                 {
-                    t.Update(invitationDocRef, FieldConstants.InvitationStatus, InvitationStatus.Accepted);
+                    if (oppositeInvitationQuerySnapshot.Count != 0)
+                    {
+                        var oppositeInvitationDocRef = oppositeInvitationQuerySnapshot.Documents[0].Reference;
+                        t.Delete(oppositeInvitationDocRef);
+                    }
+                    t.Delete(invitationDocRef);
                     t.Create(newFriendshipDocRef, newFriendship);
                 });
             }
@@ -87,7 +93,7 @@ namespace Server.Services.InvitationService
 
                 await _firestoreDb.RunTransactionAsync(async (t) =>
                 {
-                    t.Update(invitationDocRef, FieldConstants.InvitationStatus, InvitationStatus.Accepted);
+                    t.Delete(invitationDocRef);
                     t.Update(groupDocRef, FieldConstants.GroupMembers, FieldValue.ArrayUnion(userId));
                 });
             }
@@ -111,7 +117,7 @@ namespace Server.Services.InvitationService
             }
 
             var invitationDocRef = querySnapshot.Reference;
-            await invitationDocRef.UpdateAsync(FieldConstants.InvitationStatus, InvitationStatus.Rejected);
+            await invitationDocRef.DeleteAsync();
 
             return new Response<Invitation>
             {

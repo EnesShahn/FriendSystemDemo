@@ -391,7 +391,6 @@ namespace Server.Services.GroupService
                 InvitationType = Models.Enum.InvitationType.Group,
                 SenderID = groupId,
                 ReceiverID = memberIdToInvite,
-                Status = Models.Enum.InvitationStatus.Pending,
             };
 
             await newInvitationDocRef.CreateAsync(newInvitation);

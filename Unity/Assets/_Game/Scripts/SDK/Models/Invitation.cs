@@ -10,7 +10,6 @@ namespace SDK.Models
         public InvitationType InvitationType { get; set; }
         public string SenderID { get; set; }
         public string ReceiverID { get; set; }
-        public InvitationStatus Status { get; set; }
 
         public bool Equals(Invitation other) => InvitationID == other.InvitationID;
         public override bool Equals(object obj) => Equals(obj as Invitation);

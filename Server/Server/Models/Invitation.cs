@@ -17,9 +17,6 @@ namespace Server.Models
 
         [FirestoreProperty]
         public string ReceiverID { get; set; }
-
-        [FirestoreProperty]
-        public InvitationStatus Status { get; set; }
     }
 
 }

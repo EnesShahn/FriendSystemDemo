@@ -19,9 +19,10 @@ namespace SDK.Modules
         private const float InvitationAddedChangeCheckInterval = 2;
 
         //  Only storing Pending invitations
-        private Dictionary<string, Invitation> _invitations = new Dictionary<string, Invitation>();
+        private Dictionary<string, Invitation> _invitationElementMap = new Dictionary<string, Invitation>();
 
         private Action<Invitation> _onInvitationAdded;
+        private Action<Invitation> _onInvitationRemoved;
         private bool _listenForInvitationAdded;
         private bool _isFetchingInvitations;
         private float _lastInvitationAddedCheckTime;
@@ -36,7 +37,7 @@ namespace SDK.Modules
         #region Stored Data Getters
         public List<Invitation> GetStoredInvitations()
         {
-            return _invitations.Values.ToList();//TODO: Make GC free
+            return _invitationElementMap.Values.ToList();//TODO: Make GC free
         }
         #endregion
 
@@ -69,7 +70,7 @@ namespace SDK.Modules
                 return response;
             }
 
-            _invitations.Remove(invitationId);
+            _invitationElementMap.Remove(invitationId);
 
             return response;
         }
@@ -87,7 +88,7 @@ namespace SDK.Modules
                 return response;
             }
 
-            _invitations.Remove(invitationId);
+            _invitationElementMap.Remove(invitationId);
 
             return response;
         }
@@ -104,6 +105,17 @@ namespace SDK.Modules
             _onInvitationAdded -= onInvitationAddedCallback;
             CheckShouldListenToInvitationsChange();
         }
+        public void AddOnInvitationRemovedListener(Action<Invitation> onInvitationRemovedCallback)
+        {
+            _onInvitationRemoved += onInvitationRemovedCallback;
+            CheckShouldListenToInvitationsChange();
+        }
+        public void RemoveOnInvitationRemovedListener(Action<Invitation> onInvitationRemovedCallback)
+        {
+            _onInvitationRemoved -= onInvitationRemovedCallback;
+            CheckShouldListenToInvitationsChange();
+        }
+
         private void CheckShouldListenToInvitationsChange()
         {
             _listenForInvitationAdded = _onInvitationAdded != null;
@@ -133,14 +145,22 @@ namespace SDK.Modules
         #region Apply Changes Section
         private void UpdateInvitationsChange(List<Invitation> newInvitations)
         {
-            var storedFriends = _invitations.Values.ToList();
-            var invitationsToAdd = newInvitations.Except(storedFriends);
+            var storedInvitations = _invitationElementMap.Values.ToList();
+            var invitationsToAdd = newInvitations.Except(storedInvitations);
+            var invitationsToRemove = storedInvitations.Except(newInvitations);
 
+            foreach (var invitationToRemove in invitationsToRemove)
+            {
+                if (_invitationElementMap.Remove(invitationToRemove.InvitationID))
+                {
+                    _onInvitationRemoved?.Invoke(invitationToRemove);
+                }
+            }
             foreach (var invitationToAdd in invitationsToAdd)
             {
-                if (!_invitations.ContainsKey(invitationToAdd.InvitationID))
+                if (!_invitationElementMap.ContainsKey(invitationToAdd.InvitationID))
                 {
-                    _invitations.Add(invitationToAdd.InvitationID, invitationToAdd);
+                    _invitationElementMap.Add(invitationToAdd.InvitationID, invitationToAdd);
                     _onInvitationAdded?.Invoke(invitationToAdd);
                 }
             }

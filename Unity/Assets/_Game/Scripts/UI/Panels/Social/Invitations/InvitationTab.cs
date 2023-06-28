@@ -27,6 +27,7 @@ namespace UI.Panels.Social
         private void OnEnable()
         {
             Client.GetModule<InvitationModule>().AddOnInvitationAddedListener(OnInvitationAdded);
+            Client.GetModule<InvitationModule>().AddOnInvitationRemovedListener(OnInvitationRemoved);
 
             var storedInvitation = Client.GetModule<InvitationModule>().GetStoredInvitations();
             InitList(storedInvitation);
@@ -36,6 +37,7 @@ namespace UI.Panels.Social
         private void OnDisable()
         {
             Client.GetModule<InvitationModule>().RemoveOnInvitationAddedListener(OnInvitationAdded);
+            Client.GetModule<InvitationModule>().RemoveOnInvitationRemovedListener(OnInvitationRemoved);
         }
 
         private void InitList(List<Invitation> invitations)
@@ -72,7 +74,8 @@ namespace UI.Panels.Social
             invitationElement.Init(invitation, invitation.SenderID, invitation.InvitationType);
             invitationElement.transform.SetParent(_scrollRectContent.transform);
             invitationElement.transform.localScale = Vector3.one;
-            invitationElement.UIAnimator.ShowUIItems();
+            if (animate)
+                invitationElement.UIAnimator.ShowUIItems();
 
             _invitationElements.Add(invitation.InvitationID, invitationElement);
         }
@@ -85,10 +88,17 @@ namespace UI.Panels.Social
             invitationElement.RejectButton.onClick.RemoveAllListeners();
 
             _invitationElements.Remove(invitation.InvitationID);
-            invitationElement.UIAnimator.HideUIItems(() =>
+            if (animate)
+            {
+                invitationElement.UIAnimator.HideUIItems(() =>
+                {
+                    _elementPool.ReturnObject(invitationElement);
+                });
+            }
+            else
             {
                 _elementPool.ReturnObject(invitationElement);
-            });
+            }
         }
 
         private async void OnAnyAcceptInvitation(Invitation invitation)
