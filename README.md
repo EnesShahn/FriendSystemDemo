@@ -386,14 +386,14 @@ All game panels implement BasePanel from PanelSystem, each panel has different f
 
 # Assets used
 
-https://www.flaticon.com/free-icon/gamer_4333609?term=avatar&page=1&position=5&origin=search&related_id=4333609
-https://www.flaticon.com/free-icon/group-chat_4389561?term=group+chat&page=1&position=25&origin=search&related_id=4389561
-https://www.flaticon.com/free-icon/add-group_3815950?term=new+group&page=1&position=45&origin=search&related_id=3815950
-https://www.flaticon.com/free-icon/social-care_921356?term=social&page=1&position=79&origin=search&related_id=921356
-https://www.flaticon.com/free-icon/paper-plane_9131510?term=send&page=1&position=26&origin=search&related_id=9131510
-https://www.flaticon.com/free-icon/add-friend_11246037
-https://www.flaticon.com/free-icon/accept_4315445
-https://www.flaticon.com/free-icon/decline_10621089?term=reject&page=1&position=3&origin=search&related_id=10621089
-https://www.flaticon.com/free-icon/chat-bubbles_4856398?term=message&page=1&position=47&origin=search&related_id=4856398
+- https://www.flaticon.com/free-icon/gamer_4333609?term=avatar&page=1&position=5&origin=search&related_id=4333609
+- https://www.flaticon.com/free-icon/group-chat_4389561?term=group+chat&page=1&position=25&origin=search&related_id=4389561
+- https://www.flaticon.com/free-icon/add-group_3815950?term=new+group&page=1&position=45&origin=search&related_id=3815950
+- https://www.flaticon.com/free-icon/social-care_921356?term=social&page=1&position=79&origin=search&related_id=921356
+- https://www.flaticon.com/free-icon/paper-plane_9131510?term=send&page=1&position=26&origin=search&related_id=9131510
+- https://www.flaticon.com/free-icon/add-friend_11246037
+- https://www.flaticon.com/free-icon/accept_4315445
+- https://www.flaticon.com/free-icon/decline_10621089?term=reject&page=1&position=3&origin=search&related_id=10621089
+- https://www.flaticon.com/free-icon/chat-bubbles_4856398?term=message&page=1&position=47&origin=search&related_id=4856398
 
 
