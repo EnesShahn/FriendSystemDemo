@@ -63,6 +63,8 @@ namespace UI.Panels
             _placeholderText.text = _data.Placeholder;
             _infoText.text = _data.InfoText;
 
+            transform.SetAsLastSibling();
+
             gameObject.SetActive(true);
             GetComponent<UIAnimator>().ShowUIItems();
         }

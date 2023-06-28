@@ -55,6 +55,8 @@ namespace UI.Panels
 
             _infoText.text = _data.InfoText;
 
+            transform.SetAsLastSibling();
+
             gameObject.SetActive(true);
             GetComponent<UIAnimator>().ShowUIItems();
         }
