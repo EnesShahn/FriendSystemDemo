@@ -1,5 +1,6 @@
 ﻿using Google.Cloud.Firestore;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Server.Models;
 using Server.Models.Requests;
 using Server.Models.Responses;
@@ -37,37 +38,33 @@ namespace Server.Services.UserService
             var httpResponse = await client.PostAsync(uri, httpContent);
             client.Dispose();
 
-            Dictionary<string, object>? loginResponse = await httpResponse.Content.ReadFromJsonAsync<Dictionary<string, object>>();
-            if (loginResponse == null)
+            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+            var response = JObject.Parse(responseBody);
+
+            if (!httpResponse.IsSuccessStatusCode || string.IsNullOrEmpty(responseBody) || response == null)
             {
                 return new Response<Token>()
                 {
                     Success = false,
-                    Message = "Error, probably registeration"
+                    Message = response?["error"]?["message"]?.ToString() ?? "Unexpected error occured."
                 };
             }
 
-            await CreateUserDocument(loginResponse["localId"].ToString(), loginResponse["email"].ToString());
+            await CreateUserDocument(response["localId"].ToString(), response["email"].ToString());
 
-            var response = new Response<Token>();
-
-            if (loginResponse == null)
+            var tokenData = new Token
             {
-                response.Success = false;
-                response.Message = "Failed";
-            }
-            else
+                IdToken = response["idToken"].ToString(),
+                RefreshToken = response["refreshToken"].ToString(),
+                ExpiresIn = response["expiresIn"].ToString()
+            };
+            var tokenResponse = new Response<Token>
             {
-                response.Success = true;
-                response.Data = new Token
-                {
-                    IdToken = loginResponse["idToken"].ToString(),
-                    RefreshToken = loginResponse["refreshToken"].ToString(),
-                    ExpiresIn = loginResponse["expiresIn"].ToString()
-                };
-            }
+                Success = true,
+                Data = tokenData
+            };
 
-            return response;
+            return tokenResponse;
         }
         public async Task<Response<Token>> Login(LoginUserRequest request)
         {
@@ -82,52 +79,38 @@ namespace Server.Services.UserService
             });
 
             var httpResponse = await client.PostAsync(uri, httpContent);
-
             client.Dispose();
-            Dictionary<string, object>? loginResponse = await httpResponse.Content.ReadFromJsonAsync<Dictionary<string, object>>();
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                return new Response<Token>
-                {
-                    Success = false,
-                    Message = "Login error"
-                };
-            }
 
-            if (loginResponse == null)
+            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+            var response = JObject.Parse(responseBody);
+
+            if (!httpResponse.IsSuccessStatusCode || string.IsNullOrEmpty(responseBody) || response == null)
             {
                 return new Response<Token>()
                 {
                     Success = false,
-                    Message = "Invalid login credentials"
+                    Message = response?["error"]?["message"]?.ToString() ?? "Unexpected error occured."
                 };
             }
 
-            var response = new Response<Token>();
+            var userDocSnapshot = await _firestoreDb.Collection(CollectionConstants.UsersCollection)
+                .Document(response["localId"].ToString()).GetSnapshotAsync();
+            if (!userDocSnapshot.Exists)
+                await CreateUserDocument(response["localId"].ToString(), response["email"].ToString());
 
-            if (loginResponse == null)
+            var tokenData = new Token
             {
-                response.Success = false;
-                response.Message = "Failed";
-            }
-            else
+                IdToken = response["idToken"].ToString(),
+                RefreshToken = response["refreshToken"].ToString(),
+                ExpiresIn = response["expiresIn"].ToString()
+            };
+            var tokenResponse = new Response<Token>
             {
-                //Check if user data doesn't exists..
-                var userDocSnapshot = await _firestoreDb.Collection(CollectionConstants.UsersCollection).Document(loginResponse["localId"].ToString()).GetSnapshotAsync();
-                if (!userDocSnapshot.Exists)
-                    await CreateUserDocument(loginResponse["localId"].ToString(), loginResponse["email"].ToString());
+                Success = true,
+                Data = tokenData
+            };
 
-                response.Success = true;
-                response.Data = new Token
-                {
-                    IdToken = loginResponse["idToken"].ToString(),
-                    RefreshToken = loginResponse["refreshToken"].ToString(),
-                    ExpiresIn = loginResponse["expiresIn"].ToString()
-                };
-            }
-
-
-            return response;
+            return tokenResponse;
         }
         public async Task<Response<User>> GetUser(string userId)
         {
@@ -179,6 +162,7 @@ namespace Server.Services.UserService
             User newUser = new User
             {
                 Email = email,
+                LastOnlineTime = DateTime.UtcNow
             };
             await usersCollection.Document(uid).SetAsync(newUser);
         }
