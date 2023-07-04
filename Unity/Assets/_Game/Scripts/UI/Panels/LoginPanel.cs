@@ -1,4 +1,5 @@
 using EnesShahn.PanelSystem;
+using EnesShahn.Debugger;
 
 using SDK;
 
@@ -40,20 +41,30 @@ namespace UI.Panels
         private async void OnLoginButtonClicked()
         {
             var response = await Client.Login(emailInputField.text, passwordInputField.text);
-            if (response.Success)
+            if (!response.Success)
             {
-                PanelManager.Show(PanelType.MainPanel, null);
-                HidePanel();
+                GameDebugger.Log("Login error: " + response.Message);
+                var errorSBPanelData = new SingleButtonPopupPanelData("Login error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                return;
             }
+
+            PanelManager.Show(PanelType.MainPanel, null);
+            HidePanel();
         }
         private async void OnRegisterButtonClicked()
         {
             var response = await Client.Register(emailInputField.text, passwordInputField.text);
-            if (response.Success)
+            if (!response.Success)
             {
-                PanelManager.Show(PanelType.MainPanel, null);
-                HidePanel();
+                GameDebugger.Log("Registeratin error: " + response.Message);
+                var errorSBPanelData = new SingleButtonPopupPanelData("Registeratin error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                return;
             }
+
+            PanelManager.Show(PanelType.MainPanel, null);
+            HidePanel();
         }
     }
 }

@@ -385,6 +385,16 @@ namespace Server.Services.GroupService
                 };
             }
 
+            var playerQuerySnapshot = await _firestoreDb.Collection(CollectionConstants.UsersCollection).Document(memberIdToInvite).GetSnapshotAsync();
+            if (!playerQuerySnapshot.Exists)
+            {
+                return new BaseResponse
+                {
+                    Success = false,
+                    Message = "Player doesn't exist"
+                };
+            }
+
             var newInvitationDocRef = _firestoreDb.Collection(CollectionConstants.InvitationCollection).Document();
             var newInvitation = new Invitation
             {

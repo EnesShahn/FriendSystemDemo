@@ -10,5 +10,6 @@ namespace EnesShahn.PanelSystem
         ConfirmationPopupPanel,
         InputPopupPanel,
         GroupPanel,
+        SingleButtonPopupPanel,
     }
 }

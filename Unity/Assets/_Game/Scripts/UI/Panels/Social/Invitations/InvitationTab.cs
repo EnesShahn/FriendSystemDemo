@@ -5,6 +5,8 @@ using SDK.Models;
 using SDK.Modules;
 
 using EnesShahn.ObjectPool;
+using EnesShahn.Debugger;
+using EnesShahn.PanelSystem;
 
 using UnityEngine;
 using SDK;
@@ -104,8 +106,12 @@ namespace UI.Panels.Social
         private async void OnAnyAcceptInvitation(Invitation invitation)
         {
             var response = await Client.GetModule<InvitationModule>().AcceptInvitation(invitation.InvitationID);
+
             if (!response.Success)
             {
+                GameDebugger.Log("Accept Invitation error: " + response.Message);
+                var errorSBPanelData = new SingleButtonPopupPanelData("Accept Invitation error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
                 return;
             }
 
@@ -116,6 +122,9 @@ namespace UI.Panels.Social
             var response = await Client.GetModule<InvitationModule>().RejectInvitation(invitation.InvitationID);
             if (!response.Success)
             {
+                GameDebugger.Log("Reject Invitation error: " + response.Message);
+                var errorSBPanelData = new SingleButtonPopupPanelData("Reject Invitation error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
                 return;
             }
 

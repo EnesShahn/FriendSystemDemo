@@ -34,3 +34,6 @@ MonoBehaviour:
   - PanelType: 7
     PanelPrefab: {fileID: 2407822192834819736, guid: 0d31ac3167f8dfe4eb3714221f9e19b8,
       type: 3}
+  - PanelType: 8
+    PanelPrefab: {fileID: 3084288724316783172, guid: df0ee740143a17c49b8964185d863f7b,
+      type: 3}

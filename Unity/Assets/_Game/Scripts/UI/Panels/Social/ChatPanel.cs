@@ -149,17 +149,19 @@ namespace UI.Panels.Social
 
             AddMessageElement(tempMessage, true);
 
-            var resposne = await Client.GetModule<FriendshipModule>().SendMessage(_chatPanelData.OtherUser.UserID, inputTextCleaned, true);
-            if (!resposne.Success)
+            var response = await Client.GetModule<FriendshipModule>().SendMessage(_chatPanelData.OtherUser.UserID, inputTextCleaned, true);
+            if (!response.Success)
             {
-                GameDebugger.Log("Submit message error: " + resposne.Message);
+                GameDebugger.Log("Submit message error: " + response.Message);
+                var errorSBPanelData = new SingleButtonPopupPanelData("Submit Message error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
                 RemoveMessageElement(tempMessage, true);
                 return;
             }
 
             var messageElement = _messageElementMap[tempMessage.MessageID];
             _messageElementMap.Remove(tempMessage.MessageID);
-            tempMessage.MessageID = resposne.Data.MessageID;
+            tempMessage.MessageID = response.Data.MessageID;
             _messageElementMap.Add(tempMessage.MessageID, messageElement);
         }
 

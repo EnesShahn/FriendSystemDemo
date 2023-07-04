@@ -43,7 +43,7 @@ namespace UI.Panels.Social
 
         [SerializeField] private GameObject _messagesScrollRectContent;
         [SerializeField] private RectTransform _messagesScrollRectContentRT;
-        
+
         [SerializeField] private Button _closePanelButton;
         [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private Button _submitButton;
@@ -295,17 +295,19 @@ namespace UI.Panels.Social
 
             AddMessageElement(tempMessage, true);
 
-            var resposne = await Client.GetModule<GroupModule>().SendMessage(_chatPanelData.Group.GroupID, inputTextCleaned, true);
-            if (!resposne.Success)
+            var response = await Client.GetModule<GroupModule>().SendMessage(_chatPanelData.Group.GroupID, inputTextCleaned, true);
+            if (!response.Success)
             {
-                GameDebugger.Log("Submit Group message error: " + resposne.Message);
+                GameDebugger.Log("Submit Group message error: " + response.Message);
+                var panelData = new SingleButtonPopupPanelData("Submit Group Message error: " + response.Message, "Ok", null);
+                PanelManager.Show(PanelType.SingleButtonPopupPanel, panelData);
                 RemoveMessageElement(tempMessage, true);
                 return;
             }
 
             var messageElement = _messageElementMap[tempMessage.MessageID];
             _messageElementMap.Remove(tempMessage.MessageID);
-            tempMessage.MessageID = resposne.Data.MessageID;
+            tempMessage.MessageID = response.Data.MessageID;
             _messageElementMap.Add(tempMessage.MessageID, messageElement);
         }
         private async void OnInviteButtonClicked()
@@ -315,8 +317,15 @@ namespace UI.Panels.Social
                 {
                     var response = await Client.GetModule<GroupModule>().SendGroupInvitation(_chatPanelData.Group.GroupID, input);
                     if (!response.Success)
-                        GameDebugger.Log(response.Message);
-                    // TODO: Show another popup saying invitation sent
+                    {
+                        GameDebugger.Log("Invitation error: " + response.Message);
+                        var errorSBPanelData = new SingleButtonPopupPanelData("Invitation error: " + response.Message, "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                        return;
+                    }
+
+                    var sbPanelData = new SingleButtonPopupPanelData("Invitation sent.", "Ok", null);
+                    PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
                 },
                 () =>
                 {
@@ -345,19 +354,32 @@ namespace UI.Panels.Social
                     if (isCreator && !isSelf)
                     {
                         var response = await Client.GetModule<GroupModule>().KickMember(_chatPanelData.Group.GroupID, memberId);
+
                         if (!response.Success)
                         {
-                            GameDebugger.Log(response.Message);
+                            GameDebugger.Log("Kick Member error: " + response.Message);
+                            var errorSBPanelData = new SingleButtonPopupPanelData("Kick Member error: " + response.Message, "Ok", null);
+                            PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                            return;
                         }
+
+                        var sbPanelData = new SingleButtonPopupPanelData("Member kicked.", "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
                     }
                     else
                     {
                         var response = await Client.GetModule<GroupModule>().LeaveGroup(_chatPanelData.Group.GroupID);
                         if (!response.Success)
                         {
-                            GameDebugger.Log(response.Message);
+                            GameDebugger.Log("Leave Group error: " + response.Message);
+                            var errorSBPanelData = new SingleButtonPopupPanelData("Leave Group error: " + response.Message, "Ok", null);
+                            PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                            return;
                         }
                         HidePanel();
+
+                        var sbPanelData = new SingleButtonPopupPanelData("Left Group", "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
                     }
                 },
                 () =>

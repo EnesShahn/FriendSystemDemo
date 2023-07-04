@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using SDK.Models.Responses;
 using EnesShahn.Debugger;
 using EnesShahn.Configurations;
+using Newtonsoft.Json.Linq;
 
 namespace SDK
 {
@@ -24,24 +25,38 @@ namespace SDK
             GameDebugger.Log($"Sending GET request: ({endpoint}) ({idToken})\n\n");
 
             req.SendWebRequest();
-
             while (!req.isDone) await Task.Yield();
+
+            var serverResponseBodyString = req.downloadHandler.text;
+            string serverResponseMessage = serverResponseBodyString;
+            JObject serverResponseBody = null;
+            try
+            {
+                serverResponseBody = JObject.Parse(serverResponseBodyString);
+                serverResponseMessage = serverResponseBody["message"]?.ToString();
+            }
+            catch (System.Exception)
+            {
+                return new T
+                {
+                    Success = false,
+                    Message = serverResponseMessage
+                };
+            }
 
             if (req.result != UnityWebRequest.Result.Success)
             {
                 var response = new T
                 {
                     Success = false,
-                    Message = $"Error: ({endpoint})\n{req.error}\n\n"
+                    Message = serverResponseMessage
                 };
                 return response;
             }
 
-            var responseContent = req.downloadHandler.text;
+            GameDebugger.Log($"Response: {serverResponseMessage}");
 
-            GameDebugger.Log($"Response: {responseContent}");
-
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            return serverResponseBody.ToObject<T>();
         }
         public static async Task<T> PostDataAsync<T>(string endpoint, object data, string idToken = null) where T : BaseResponse, new()
         {
@@ -59,23 +74,39 @@ namespace SDK
             GameDebugger.Log($"Sending POST request: ({endpoint}) ({idToken}) ({dataSerialized})\n\n");
 
             req.SendWebRequest();
-
             while (!req.isDone) await Task.Yield();
+
+            var serverResponseBodyString = req.downloadHandler.text;
+            string serverResponseMessage = serverResponseBodyString;
+            JObject serverResponseBody = null;
+            try
+            {
+                serverResponseBody = JObject.Parse(serverResponseBodyString);
+                serverResponseMessage = serverResponseBody["message"]?.ToString();
+            }
+            catch (System.Exception)
+            {
+                return new T
+                {
+                    Success = false,
+                    Message = serverResponseMessage
+                    // Message = $"(POST)({endpoint}):\n{serverResponseMessage}"
+                };
+            }
 
             if (req.result != UnityWebRequest.Result.Success)
             {
                 var response = new T
                 {
                     Success = false,
-                    Message = $"Error: ({endpoint})\n{req.error}\n\n"
+                    Message = serverResponseMessage
                 };
                 return response;
             }
 
-            var responseContent = req.downloadHandler.text;
-            GameDebugger.Log($"Response: {responseContent}");
+            GameDebugger.Log($"Response: {serverResponseMessage}");
 
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            return serverResponseBody.ToObject<T>();
         }
     }
 }

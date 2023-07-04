@@ -20,7 +20,7 @@ namespace UI.Panels.Social
         [SerializeField] private GameObject _scrollRectContent;
         [SerializeField] private Button _createNewGroupButton;
 
-        private Dictionary<string, GroupElement> _groupElements = new Dictionary<string, GroupElement>();
+        private Dictionary<string, GroupElement> _groupElementMap = new Dictionary<string, GroupElement>();
         private ComponentPool<GroupElement> _elementPool;
 
         private void Awake()
@@ -46,11 +46,11 @@ namespace UI.Panels.Social
 
         private void InitList(List<Group> groups)
         {
-            foreach (var groupElement in _groupElements.Values.ToList())
+            foreach (var groupElement in _groupElementMap.Values.ToList())
             {
                 RemoveGroupElement(groupElement.GroupData, false);
             }
-            _groupElements.Clear();
+            _groupElementMap.Clear();
 
             foreach (var group in groups)
             {
@@ -78,16 +78,16 @@ namespace UI.Panels.Social
             if (animate)
                 groupElement.UIAnimator.ShowUIItems();
 
-            _groupElements.Add(group.GroupID, groupElement);
+            _groupElementMap.Add(group.GroupID, groupElement);
         }
         private void RemoveGroupElement(Group group, bool animate)
         {
-            if (!_groupElements.ContainsKey(group.GroupID)) return;
+            if (!_groupElementMap.ContainsKey(group.GroupID)) return;
 
-            var groupElement = _groupElements[group.GroupID];
+            var groupElement = _groupElementMap[group.GroupID];
             groupElement.OpenChatButton.onClick.RemoveAllListeners();
 
-            _groupElements.Remove(group.GroupID);
+            _groupElementMap.Remove(group.GroupID);
             if (animate)
             {
                 groupElement.UIAnimator.HideUIItems(() =>
@@ -116,9 +116,14 @@ namespace UI.Panels.Social
                     var response = await Client.GetModule<GroupModule>().CreateGroup(input);
                     if (!response.Success)
                     {
-                        GameDebugger.Log(response.Message);
+                        GameDebugger.Log("Create Group error: " + response.Message);
+                        var errorSBPanelData = new SingleButtonPopupPanelData("Create Group error: " + response.Message, "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
                         return;
                     }
+
+                    var sbPanelData = new SingleButtonPopupPanelData("Group created.", "Ok", null);
+                    PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
 
                     AddGroupElement(response.Data, true);
                 },

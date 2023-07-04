@@ -193,8 +193,16 @@ namespace UI.Panels.Social
                 {
                     var response = await Client.GetModule<FriendshipModule>().RemoveFriend(user.UserID);
 
-                    GameDebugger.Log(response.Message);
-                    // TODO: Show another popup saying friend removed or something...
+                    if (!response.Success)
+                    {
+                        GameDebugger.Log("Remove Friend error: " + response.Message);
+                        var panelData = new SingleButtonPopupPanelData("Remove Friend error: " + response.Message, "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, panelData);
+                        return;
+                    }
+
+                    var sbPanelData = new SingleButtonPopupPanelData("Removed friend.", "Ok", null);
+                    PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
                 },
                 () =>
                 {
@@ -208,8 +216,15 @@ namespace UI.Panels.Social
                 {
                     var response = await Client.GetModule<FriendshipModule>().SendFriendInvitation(input);
                     if (!response.Success)
-                        GameDebugger.Log(response.Message);
-                    // TODO: Show another popup saying invitation sent
+                    {
+                        GameDebugger.Log("Send Invitation error: " + response.Message);
+                        var errorSBPanelData = new SingleButtonPopupPanelData("Send Invitation error: " + response.Message, "Ok", null);
+                        PanelManager.Show(PanelType.SingleButtonPopupPanel, errorSBPanelData);
+                        return;
+                    }
+
+                    var sbPanelData = new SingleButtonPopupPanelData("Invitation sent.", "Ok", null);
+                    PanelManager.Show(PanelType.SingleButtonPopupPanel, sbPanelData);
                 },
                 () =>
                 {
