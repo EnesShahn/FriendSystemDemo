@@ -17,7 +17,7 @@
 		public const string ReceiverID = "ReceiverID";
 		public const string InvitationStatus = "Status";
 
-		public const string GroupCreatorID = "CreatorID";
+		public const string GroupCreatorID = "CreatorUID";
 		public const string GroupMembers = "Members";
 
 		public const string CreateTime = "CreateTime";

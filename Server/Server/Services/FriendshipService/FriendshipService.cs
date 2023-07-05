@@ -188,16 +188,23 @@ namespace Server.Services.FriendshipService
                 };
             }
 
-            var querySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection)
-                .WhereEqualTo(FieldConstants.SenderID, userId).WhereEqualTo(FieldConstants.ReceiverID, friendId).GetSnapshotAsync();
-
-            if (querySnapshot.Count != 0)
+            var invitationQuerySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection)
+                .WhereEqualTo(FieldConstants.SenderID, userId)
+                .WhereEqualTo(FieldConstants.ReceiverID, friendId).GetSnapshotAsync();
+            if (invitationQuerySnapshot.Count != 0)
             {
                 return new BaseResponse
                 {
                     Success = false,
                     Message = "Invite already sent"
                 };
+            }
+
+            List<Invitation> invitations = new List<Invitation>();
+            foreach (var docSnapshot in invitationQuerySnapshot.Documents)
+            {
+                var invitation = docSnapshot.ConvertTo<Invitation>();
+                invitations.Add(invitation);
             }
 
 

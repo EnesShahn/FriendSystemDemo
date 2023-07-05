@@ -236,13 +236,13 @@ namespace Server.Services.GroupService
                     else if (group.Members.Count > 1) // Pass the leadership to another member
                     {
                         var nextMemberToBeLeaderID = group.Members.First(memberId => memberId != userId);
-                        t.Update(groupSnapshot.Reference, FieldConstants.GroupCreatorID, nextMemberToBeLeaderID);
-                        t.Update(groupSnapshot.Reference, FieldConstants.GroupMembers, FieldValue.ArrayRemove(userId));
+                        t.Update(groupDocRef, FieldConstants.GroupCreatorID, nextMemberToBeLeaderID);
+                        t.Update(groupDocRef, FieldConstants.GroupMembers, FieldValue.ArrayRemove(userId));
                     }
                 }
                 else // Leave the group
                 {
-                    t.Update(groupSnapshot.Reference, FieldConstants.GroupMembers, FieldValue.ArrayRemove(userId));
+                    t.Update(groupDocRef, FieldConstants.GroupMembers, FieldValue.ArrayRemove(userId));
                 }
             });
 
@@ -376,12 +376,26 @@ namespace Server.Services.GroupService
                     Message = "You don't have the premission to invite players"
                 };
             }
-            if (group.Members.Contains(memberIdToInvite))
+
+
+            var invitationQuerySnapshot = await _firestoreDb.Collection(CollectionConstants.InvitationCollection)
+                .WhereEqualTo(FieldConstants.SenderID, groupId)
+                .WhereEqualTo(FieldConstants.ReceiverID, memberIdToInvite).GetSnapshotAsync();
+            if (invitationQuerySnapshot.Count != 0)
             {
                 return new BaseResponse
                 {
                     Success = false,
                     Message = "Invite already sent"
+                };
+            }
+
+            if (group.Members.Contains(memberIdToInvite))
+            {
+                return new BaseResponse
+                {
+                    Success = false,
+                    Message = "Already member"
                 };
             }
 
