@@ -22,9 +22,9 @@ The user interface is built using the Unity engine. It allows users to:
 - Chat privately with friends.
 - Search for friends by name identifier.
 - View online status and last active time of friends.
-- Create a group with other users
+- Create/Join a group with other users
 - Chat with group members
-- Manage group memebers
+- Manage group members
 
 ## Backend System
 
