@@ -32,7 +32,7 @@ The backend system is built using ASP.NET Core. This technology is suitable for 
 
 ## Database
 
-Firebase Firestore Database is used to store user data, friend lists, chat messages, online status, groups. Firebase Firestore provides an efficient and secure NoSQL database solution, which is perfect for the requirements of the Friend System. It will store:
+Firebase Firestore Database is used to store user data, friend lists, chat messages, online status, groups. Firebase Firestore provides an efficient and secure NoSQL database solution, which is perfect for the requirements of the Friend System.
 
 ## Hosting
 
